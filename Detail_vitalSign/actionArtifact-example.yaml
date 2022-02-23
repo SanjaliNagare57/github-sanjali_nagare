@@ -1,0 +1,94 @@
+
+
+Cameron McKenzie
+TechTarget
+30 Nov 2020
+  
+About This Blog
+Community driven content discussing all aspects of software development from DevOps to design patterns.
+
+Latest Blog Posts
+Noon is neither 12am nor 12pm
+Node.js file upload example with Ajax and JavaScript
+Lessons learned from the Log4j 2 vulnerability
+See More
+Related Content
+10 best GitHub Actions examples
+– TheServerSide.com
+A declarative Jenkins pipeline for Ant builds on ...
+– TheServerSide.com
+Compare Azure DevOps vs. GitHub for CI/CD pipelines
+– SearchCloudComputing
+Sponsored News
+A Guide to Mitigating Risk of Insider Threats
+–Microsoft
+Next Step in The Digital Workspace: Using Intelligence to Improve Data Delivery...
+–Citrix
+Vendor Resources
+CLOUD THREAT REPORT 2H 2021
+–Optiv
+Threatconnect SOAR Optimize Your Security Processes, Increase Team Efficiency, ...
+–ThreatConnect
+
+
+When a GitHub Actions workflow successfully completes a build, it creates artifacts such as zip files, compiled code, Java JAR files and other assembled components.
+
+Unfortunately, the ephemeral Docker container on which the GitHub Actions artifacts are created disappears once the workflow completes. But it’s not that hard for a developer to have GitHub archive those artifacts and make them available as a downloadable link.
+
+How? Just use the GitHub upload-artifact action.
+
+Steps to publish GitHub Action artifacts
+A developer should follow these five steps to publish GitHub Actions artifacts for download:
+
+Perform GitHub Actions build steps
+Create a temporary folder in the container being used
+Copy all artifacts of interest into that temporary folder
+Use GitHub’s upload-artifact action
+Provide a meaningful name for the artifact download link
+Specify the path to the folder containing your GitHub Action artifacts
+Run the GitHub Actions workflow and find the published artifacts on the workflow’s build page
+GitHub Actions artifacts YAML example
+The easiest way to demonstrate how GitHub’s artifact upload action works is to add a step to a simple workflow that creates a temporary directory. Then, use the touch and echo commands to create a few simple files. Once a developer completes this action, the files will publish as artifacts.
+
+Your intro to GitHub Actions training course
+Here’s how to get started with GitHub Actions:
+
+Create your first GitHub Actions Workflow issues
+Poke around in the Actions’ Docker container
+Learn about a multi-step GitHub workflows
+See how a multi-job GitHub Action works
+Familiarize yourself with GitHub Actions environment variables on Ubuntu, Windows and MacOS
+Learn to use GitHub Action Secrets
+Follow these tutorials to learn GitHub Actions fast.
+
+Developers should use the following GitHub Actions workflow example to publish artifacts so they become available for download on the GitHub Actions build summary page:
+
+# Publish GitHub workflow artifacts tutorial example
+name: Publish GitHub Actions Artifacts Example
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+       
+  archive-build-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Step 1 - Create a temporary artifact downloads folder
+        run: mkdir downloads
+        
+      - name: step 2 - Add artifacts to publish to the temp folder
+        run: |
+          cd downloads
+          echo 'alpha'    > alpha.html
+          echo 'bravo'    > bravo.html
+          echo 'charlie'  > charlie.html
+          cd ..
+    
+      - name: Step 3 - Use the Upload Artifact GitHub Action
+        uses: actions/upload-artifact@v2
+        with: 
+          name: assets-for-download
+          path: downloads
